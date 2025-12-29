@@ -1,60 +1,87 @@
-from sqlalchemy import text
+import os
 import pandas as pd
-from utils.db import get_engine
+from sqlalchemy import text
+from app.utils.db import get_engine, is_cloud
 
+DATA_PATH = "data/raw"
+
+# -------------------------------
+# MARKETING ROAS
+# -------------------------------
 def get_daily_roas():
+    if is_cloud():
+        orders = pd.read_csv(f"{DATA_PATH}/blinkit_orders.csv", parse_dates=["order_date"])
+        marketing = pd.read_csv(f"{DATA_PATH}/blinkit_marketing_performance.csv", parse_dates=["date"])
+
+        daily_revenue = (
+            orders.groupby(orders["order_date"].dt.date)["order_total"]
+            .sum()
+            .reset_index(name="total_revenue")
+        )
+
+        daily_spend = (
+            marketing.groupby(marketing["date"].dt.date)["spend"]
+            .sum()
+            .reset_index(name="total_spend")
+        )
+
+        df = pd.merge(daily_revenue, daily_spend, on="date", how="inner")
+        df["roas"] = df["total_revenue"] / df["total_spend"]
+        return df
+
+    engine = get_engine()
     query = text("""
         WITH daily_revenue AS (
-            SELECT
-                DATE(order_date) AS day,
-                SUM(order_total) AS total_revenue
+            SELECT DATE(order_date) AS day, SUM(order_total) AS revenue
             FROM raw_orders
             GROUP BY DATE(order_date)
         ),
         daily_spend AS (
-            SELECT
-                date AS day,
-                SUM(spend) AS total_spend
+            SELECT date AS day, SUM(spend) AS spend
             FROM raw_marketing
             GROUP BY date
         )
-        SELECT
-            COALESCE(r.day, s.day) AS day,
-            COALESCE(r.total_revenue, 0) AS total_revenue,
-            COALESCE(s.total_spend, 0) AS total_spend,
-            CASE
-                WHEN COALESCE(s.total_spend, 0) = 0 THEN NULL
-                ELSE ROUND(r.total_revenue / s.total_spend, 2)
-            END AS roas
+        SELECT r.day, r.revenue, s.spend, (r.revenue / s.spend) AS roas
         FROM daily_revenue r
-        FULL OUTER JOIN daily_spend s
-        ON r.day = s.day
-        ORDER BY day
+        JOIN daily_spend s ON r.day = s.day
+        ORDER BY r.day;
     """)
 
-    engine = get_engine()
     with engine.connect() as conn:
-        df = pd.read_sql(query, conn)
+        return pd.read_sql(query, conn)
 
-    return df
 
+# -------------------------------
+# DELIVERY OPERATIONS
+# -------------------------------
 def get_delivery_operations():
+    if is_cloud():
+        df = pd.read_csv(f"{DATA_PATH}/blinkit_orders.csv", parse_dates=[
+            "order_date", "promised_delivery_time", "actual_delivery_time"
+        ])
+
+        df["is_late"] = df["actual_delivery_time"] > df["promised_delivery_time"]
+        df["delay_minutes"] = (
+            (df["actual_delivery_time"] - df["promised_delivery_time"])
+            .dt.total_seconds() / 60
+        ).clip(lower=0)
+
+        return df
+
+    engine = get_engine()
     query = text("""
         SELECT
             order_id,
-            DATE(order_date) AS order_day,
+            order_date,
             promised_delivery_time,
             actual_delivery_time,
-            delivery_status,
-            EXTRACT(EPOCH FROM (actual_delivery_time - promised_delivery_time))/60
-                AS delay_minutes
-        FROM raw_orders
-        WHERE actual_delivery_time IS NOT NULL
-          AND promised_delivery_time IS NOT NULL
+            CASE
+                WHEN actual_delivery_time > promised_delivery_time THEN 1
+                ELSE 0
+            END AS is_late,
+            EXTRACT(EPOCH FROM (actual_delivery_time - promised_delivery_time))/60 AS delay_minutes
+        FROM raw_orders;
     """)
 
-    engine = get_engine()
     with engine.connect() as conn:
-        df = pd.read_sql(query, conn)
-
-    return df
+        return pd.read_sql(query, conn)
