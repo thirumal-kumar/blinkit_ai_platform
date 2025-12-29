@@ -1,0 +1,63 @@
+2025-12-29 12:59:43.296 | INFO     | __main__:inspect_excel:12 - Excel file detected: data/raw/Blinkit.xlsx
+2025-12-29 12:59:43.296 | INFO     | __main__:inspect_excel:13 - Sheets found: ['blinkit_customer_feedback', 'blinkit_customers', 'blinkit_marketing_performance', 'blinkit_order_items', 'blinkit_orders', 'blinkit_products']
+2025-12-29 12:59:43.700 | INFO     | __main__:inspect_excel:17 - --- Sheet: blinkit_customer_feedback ---
+2025-12-29 12:59:43.700 | INFO     | __main__:inspect_excel:18 - Rows: 5000
+2025-12-29 12:59:43.700 | INFO     | __main__:inspect_excel:19 - Columns: ['feedback_id', 'order_id', 'customer_id', 'rating', 'feedback_text', 'feedback_category', 'sentiment', 'feedback_date']
+2025-12-29 12:59:43.704 | INFO     | __main__:inspect_excel:20 - Preview:
+   feedback_id    order_id  ...  sentiment  feedback_date
+0      2234710  1961864118  ...    Neutral     2024-07-17
+1      5450964  1549769649  ...   Negative     2024-05-28
+2       482108  9185164487  ...    Neutral     2024-09-23
+
+[3 rows x 8 columns]
+2025-12-29 12:59:44.063 | INFO     | __main__:inspect_excel:17 - --- Sheet: blinkit_customers ---
+2025-12-29 12:59:44.063 | INFO     | __main__:inspect_excel:18 - Rows: 2500
+2025-12-29 12:59:44.063 | INFO     | __main__:inspect_excel:19 - Columns: ['customer_id', 'customer_name', 'email', 'phone', 'address', 'area', 'pincode', 'registration_date', 'customer_segment', 'total_orders', 'avg_order_value']
+2025-12-29 12:59:44.067 | INFO     | __main__:inspect_excel:20 - Preview:
+   customer_id  customer_name  ... total_orders  avg_order_value
+0     97475543  Niharika Nagi  ...           13           451.92
+1     22077605   Megha Sachar  ...            4           825.48
+2     47822591     Hema Bahri  ...           17          1969.81
+
+[3 rows x 11 columns]
+2025-12-29 12:59:44.531 | INFO     | __main__:inspect_excel:17 - --- Sheet: blinkit_marketing_performance ---
+2025-12-29 12:59:44.531 | INFO     | __main__:inspect_excel:18 - Rows: 5400
+2025-12-29 12:59:44.531 | INFO     | __main__:inspect_excel:19 - Columns: ['campaign_id', 'campaign_name', 'date', 'target_audience', 'channel', 'impressions', 'clicks', 'conversions', 'spend', 'revenue_generated', 'roas']
+2025-12-29 12:59:44.535 | INFO     | __main__:inspect_excel:20 - Preview:
+   campaign_id      campaign_name  ... revenue_generated  roas
+0       548299  New User Discount  ...           4777.75  3.60
+1       390914    Weekend Special  ...           6238.11  2.98
+2       834385     Festival Offer  ...           2621.00  2.95
+
+[3 rows x 11 columns]
+2025-12-29 12:59:44.876 | INFO     | __main__:inspect_excel:17 - --- Sheet: blinkit_order_items ---
+2025-12-29 12:59:44.876 | INFO     | __main__:inspect_excel:18 - Rows: 5000
+2025-12-29 12:59:44.876 | INFO     | __main__:inspect_excel:19 - Columns: ['order_id', 'product_id', 'quantity', 'unit_price']
+2025-12-29 12:59:44.878 | INFO     | __main__:inspect_excel:20 - Preview:
+     order_id  product_id  quantity  unit_price
+0  1961864118      642612         3      517.03
+1  1549769649      378676         1      881.42
+2  9185164487      741341         2      923.84
+2025-12-29 12:59:45.325 | INFO     | __main__:inspect_excel:17 - --- Sheet: blinkit_orders ---
+2025-12-29 12:59:45.325 | INFO     | __main__:inspect_excel:18 - Rows: 5000
+2025-12-29 12:59:45.325 | INFO     | __main__:inspect_excel:19 - Columns: ['order_id', 'customer_id', 'order_date', 'promised_delivery_time', 'actual_delivery_time', 'delivery_status', 'order_total', 'payment_method', 'delivery_partner_id', 'store_id']
+2025-12-29 12:59:45.328 | INFO     | __main__:inspect_excel:20 - Preview:
+     order_id  customer_id  ... delivery_partner_id store_id
+0  1961864118     30065862  ...               63230     4771
+1  1549769649      9573071  ...               14983     7534
+2  9185164487     45477575  ...               39859     9886
+
+[3 rows x 10 columns]
+2025-12-29 12:59:45.602 | INFO     | __main__:inspect_excel:17 - --- Sheet: blinkit_products ---
+2025-12-29 12:59:45.602 | INFO     | __main__:inspect_excel:18 - Rows: 268
+2025-12-29 12:59:45.602 | INFO     | __main__:inspect_excel:19 - Columns: ['product_id', 'product_name', 'category', 'brand', 'price', 'mrp', 'margin_percentage', 'shelf_life_days', 'min_stock_level', 'max_stock_level']
+2025-12-29 12:59:45.606 | INFO     | __main__:inspect_excel:20 - Preview:
+   product_id product_name  ... min_stock_level max_stock_level
+0      153019       Onions  ...              13              88
+1       11422     Potatoes  ...              20              65
+2      669378     Potatoes  ...              23              70
+
+[3 rows x 10 columns]
+2025-12-29 13:04:33.677 | INFO     | __main__:extract_sheets:21 - Extracted blinkit_orders → data/raw/blinkit_orders.csv (5000 rows)
+2025-12-29 13:04:34.151 | INFO     | __main__:extract_sheets:21 - Extracted blinkit_marketing_performance → data/raw/blinkit_marketing_performance.csv (5400 rows)
+2025-12-29 13:04:34.571 | INFO     | __main__:extract_sheets:21 - Extracted blinkit_customer_feedback → data/raw/blinkit_customer_feedback.csv (5000 rows)

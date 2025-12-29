@@ -1,0 +1,40 @@
+We are building the “AI-Powered Blinkit Business Decision Platform”.
+
+Refer to my Blinkit Project Control file.
+Current Phase: <PHASE NUMBER + NAME>
+
+Environment:
+- OS: Ubuntu
+- Conda env: blinkit_ai
+- GPU: Available
+- Hosting planned: Streamlit Cloud / EC2
+
+Rules:
+1. Give code in SMALL, testable files only.
+2. One responsibility per script.
+3. Include validation and logging.
+4. Nothing proceeds without verification steps.
+5. Assume this may be resumed in a new chat.
+
+Task for this message:
+<EXACT TASK>
+
+
+//
+Refer to Blinkit Project Control file.
+Current Phase: Phase 1 – Data Ingestion & Validation
+
+Environment:
+- OS: Ubuntu
+- Conda: blinkit_ai
+- GPU: Available (not used in this phase)
+
+Rules:
+- No SQL
+- No transformations
+- Read-only validation
+- Log everything
+- Scripts must be independently executable
+
+Task:
+Validate raw Blinkit datasets and generate data dictionary and validation report.
